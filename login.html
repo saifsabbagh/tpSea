@@ -1,28 +1,29 @@
 <!DOCTYPE HTML>
 <html>
+
 <head>
-  <title>Login Page</title>
-  <link rel="stylesheet" href="login.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-        
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="login.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 
-  <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link href="css/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  <link href="css/owl.carousel.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 
-  <link href="css/owl.theme.default.min.css" rel="stylesheet">
+    <link href="css/bootstrap-icons.css" rel="stylesheet">
 
-  <link href="css/templatemo-medic-care.css" rel="stylesheet">
+    <link href="css/owl.carousel.min.css" rel="stylesheet">
+
+    <link href="css/owl.theme.default.min.css" rel="stylesheet">
+
+    <link href="css/templatemo-medic-care.css" rel="stylesheet">
 </head>
 
- 
-<body  id="top">   
-        <main>
+
+<body id="top">
+    <main>
         <nav class="navbar navbar-expand-lg bg-light fixed-top shadow-lg">
             <div class="container">
                 <a class="navbar-brand mx-auto d-lg-none" href="./index.html">
@@ -39,9 +40,9 @@
                 </a>
                 <di class="nav-item">
                     <a class="nav-link" id="login" href="./sign.html">Sign Up</a>
-                </div>
-    <div class="collapse navbar-collapse" id="navbarNav">
-                    <!-- <ul class="navbar-nav mx-5">
+            </div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- <ul class="navbar-nav mx-5">
                         <li class="nav-item active">
                             <a class="nav-link" href="#hero">Home</a>
                         </li>
@@ -53,9 +54,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#timeline">Timeline</a>
                         </li> -->
-                        
 
-                        <!-- <li class="nav-item">
+
+                <!-- <li class="nav-item">
                             <a class="nav-link" href="#reviews">Testimonials</a>
                         </li>
                         <li class="nav-item">
@@ -67,39 +68,72 @@
 
                         
                     </ul> -->
-                </div>
+            </div>
 
             </div>
         </nav>
-        <div class="form">
-            <form action="app.html">
 
-                <div class="log">  Login </div>
-            <div class="inside">
-                <div class="cont"> E-mail  </div>  
-                <div class="place">
-                <input type="text" id="name" placeholder="E-mail"  class="text" />
-                <br>
-                </div>
-                <div class="cont"> Password </div>
-                <div class="place">
-                <input type="password" id="password" placeholder="Enter Your Password" class="text" />
-                </div>
-                <br>
-                <input type="submit" value="login"  class="login"/>
-                <div class="noaccount">
-                <footer><strong><a href="#" >forgot password ? </a></strong> <br>
-                    Dont have an account?<br>
-                    <strong>
+        <div class="form">
+            <form action="app.html" id="reg-form">
+
+                <div class="log"> Login </div>
+                <div class="inside">
+                    <div class="cont"> username </div>
+                    <div class="place">
+                        <input type="text" id="name" placeholder="UserName" class="text" />
+                        <br>
+                    </div>
+                    <div class="cont"> Password </div>
+                    <div class="place">
+                        <input type="password" id="password" placeholder="Enter Your Password" class="text" />
+                    </div>
+                    <br>
+                    <input type="submit" value="login" class="login" />
+                    <div class="noaccount">
+                        <footer><strong><a href="#" >forgot password ? </a></strong> <br> Dont have an account?<br>
+                            <strong>
                     <a href="sign.html">Sign Up</a>
                     </strong>
-                </footer>
+                        </footer>
+                    </div>
                 </div>
-            </div>
-        </form>
-    </div>
+            </form>
+        </div>
+        <script>
+            const form = document.getElementById("reg-form");
+            form.addEventListener('submit', registerUser);
 
-    
-    </body>
+            async function registerUser(event) {
+                event.preventDefault();
+                const username = document.getElementById('name').value;
+                const password = document.getElementById('password').value;
+
+                const result = await fetch('http://127.0.0.1:4000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': localStorage.getItem("token") // Fixed typo here
+                    },
+                    body: JSON.stringify({
+                        username,
+                        password
+                    })
+                }).then((res) => res.json());
+
+                if (result.status === 'ok') {
+                    localStorage.setItem("token", result.data);
+                    if (typeof window !== 'undefined' && window.location) {
+                        window.location.href = 'app.html';
+                    } else {
+                        console.error('Unable to redirect: window.location is not available.');
+                    }
+                } else {
+                    alert(result.error);
+                }
+            }
+        </script>
+
+</body>
 </main>
+
 </html>

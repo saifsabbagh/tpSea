@@ -1,27 +1,28 @@
 <!DOCTYPE HTML>
 <html>
+
 <head>
-  <title>Login Page</title>
-  <link rel="stylesheet" href="sign.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-        
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Login Page</title>
+    <link rel="stylesheet" href="sign.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
 
-  <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link href="css/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-  <link href="css/owl.carousel.min.css" rel="stylesheet">
+    <link href="css/bootstrap.min.css" rel="stylesheet">
 
-  <link href="css/owl.theme.default.min.css" rel="stylesheet">
+    <link href="css/bootstrap-icons.css" rel="stylesheet">
 
-  <link href="css/templatemo-medic-care.css" rel="stylesheet">
+    <link href="css/owl.carousel.min.css" rel="stylesheet">
+
+    <link href="css/owl.theme.default.min.css" rel="stylesheet">
+
+    <link href="css/templatemo-medic-care.css" rel="stylesheet">
 </head>
- 
-<body  id="top">   
-        <main>
+
+<body id="top">
+    <main>
         <nav class="navbar navbar-expand-lg bg-light fixed-top shadow-lg">
             <div class="container">
                 <a class="navbar-brand mx-auto d-lg-none" href="./index.html">
@@ -38,9 +39,9 @@
                 </a>
                 <di class="nav-item">
                     <a class="nav-link" id="login" href="./login.html">Login</a>
-                </div>
-    <div class="collapse navbar-collapse" id="navbarNav">
-                    <!-- <ul class="navbar-nav mx-5">
+            </div>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <!-- <ul class="navbar-nav mx-5">
                         <li class="nav-item active">
                             <a class="nav-link" href="#hero">Home</a>
                         </li>
@@ -52,9 +53,9 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#timeline">Timeline</a>
                         </li> -->
-                        
 
-                        <!-- <li class="nav-item">
+
+                <!-- <li class="nav-item">
                             <a class="nav-link" href="#reviews">Testimonials</a>
                         </li>
                         <li class="nav-item">
@@ -66,42 +67,89 @@
 
                         
                     </ul> -->
-                </div>
+            </div>
 
             </div>
         </nav>
-        <div class="form">
-            <form action="login.html">
 
-                <div class="log">  sign Up </div>
-            <div class="inside">
-                <div class="cont"> E-mail  </div>  
-                <div class="place">
-                <input type="text" id="name" placeholder="E-mail"  class="text" />
-                <br>
-                <div class="cont"> User Name </div>  
-                <div class="place">
-                <input type="text" id="name" placeholder="User Name"  class="text" />
-                <br>
-                </div>
-                <div class="cont"> Password </div>
-                <div class="place">
-                <input type="password" id="password" placeholder="Enter Your Password" class="text" />
-                </div>
-                <br>
-                <input type="submit" value="Sign Up"  class="login"/>
-                <div class="noaccount">
-                <footer>already have an account?<br>
-                    <strong>
+        <div class="form">
+            <form action="login.html" id="reg-form">
+
+                <div class="log"> sign Up </div>
+                <div class="inside">
+                    <div class="cont"> E-mail </div>
+                    <div class="place">
+                        <input type="text" id="email" placeholder="E-mail" class="text" />
+                        <br>
+                        <div class="cont"> User Name </div>
+                        <div class="place">
+                            <input type="text" id="name" placeholder="User Name" class="text" />
+                            <br>
+                        </div>
+                        <div class="cont"> Password </div>
+                        <div class="place">
+                            <input type="password" id="password" placeholder="Enter Your Password" class="text" />
+                        </div>
+                        <br>
+                        <input type="submit" value="Sign Up" class="login" />
+                        <div class="noaccount">
+                            <footer>already have an account?<br>
+                                <strong>
                     <a href="login.html">Login</a>
                     </strong>
-                </footer>
-                </div>
+                            </footer>
+                        </div>
+                    </div>
+            </form>
             </div>
-        </form>
-    </div>
 
-    
-    </body>
+            <script>
+                const form = document.getElementById("reg-form");
+                form.addEventListener('submit', registerUser);
+
+                async function registerUser(event) {
+                    event.preventDefault();
+
+                    const email = document.getElementById('email').value;
+                    const username = document.getElementById('name').value;
+                    const password = document.getElementById('password').value;
+
+                    try {
+                        const response = await fetch('http://127.0.0.1:4000/api/register', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                email,
+                                username,
+                                password,
+                            }),
+                        });
+
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+
+                        const result = await response.json();
+
+                        if (result.status === 'ok') {
+                            console.log('Registration successful!'); 
+                            if (typeof window !== 'undefined' && window.location) {
+                                window.location.href = 'login.html';
+                            } else {
+                                console.error('Unable to redirect: window.location is not available.');
+                            }
+                        } else {
+                            alert(result.error);
+                        }
+                    } catch (error) {
+                        console.error('Error during registration:', error.message);
+                        alert('An error occurred during registration. Please try again.');
+                    }
+                }
+            </script>
+</body>
 </main>
+
 </html>
